@@ -4,7 +4,7 @@
 *.egg-ignore
 *.egg-info
 dist
-build
+build/
 docs/_build
 click.egg-info
 .tox

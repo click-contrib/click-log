@@ -1,18 +1,26 @@
+import logging
+
 import click
 from click.testing import CliRunner
-import pytest
 
 import click_log
+
+import pytest
+
+
+test_logger = logging.getLogger(__name__)
+
 
 @pytest.fixture
 def runner():
     return CliRunner()
 
+
 def test_basic(runner):
     @click.command()
+    @click_log.init()
     def cli():
-        logger = click_log.basic_config()
-        logger.error('damn')
+        test_logger.error('damn')
 
     result = runner.invoke(cli, catch_exceptions=False)
     assert not result.exception
