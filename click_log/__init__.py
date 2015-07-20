@@ -47,4 +47,5 @@ def basic_config(logger=None):
         logger = logging.getLogger(logger)
     logger.handlers = [_default_handler]
     logger.setLevel(logging.INFO)
+    logger.propagate = False
     return logger
