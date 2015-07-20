@@ -10,8 +10,8 @@ def runner():
 
 def test_basic(runner):
     @click.command()
-    @click_log.pass_logger
-    def cli(logger):
+    def cli():
+        logger = click_log.basic_config()
         logger.error('damn')
 
     result = runner.invoke(cli, catch_exceptions=False)
