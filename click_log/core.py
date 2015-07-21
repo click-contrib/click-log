@@ -45,7 +45,7 @@ _default_handler = logging.StreamHandler(ClickStream())
 _default_handler.formatter = ColorFormatter()
 
 
-def _basic_config(logger=None):
+def basic_config(logger=None):
     if not isinstance(logger, logging.Logger):
         logger = logging.getLogger(logger)
     logger.handlers = [_default_handler]

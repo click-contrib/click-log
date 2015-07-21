@@ -12,6 +12,7 @@ if not hasattr(click, 'get_current_context'):
 from .core import (
     ClickStream,
     ColorFormatter,
+    basic_config,
     get_level,
     init,
     set_level,
