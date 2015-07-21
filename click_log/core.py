@@ -59,7 +59,7 @@ def init(logger=None):
         @functools.wraps(f)
         def wrapper(*args, **kwargs):
             m = _meta()
-            l = _basic_config(logger=logger)
+            l = basic_config(logger=logger)
             l.setLevel(m.get('level', DEFAULT_LEVEL))
 
             if m.setdefault('logger', l) is not l:
