@@ -19,6 +19,7 @@ setup(
     author_email='markus@unterwaditzer.net',
     url='https://github.com/click-contrib/click-log',
     license='MIT',
+    long_description=open('README.rst').read(),
     packages=['click_log'],
     install_requires=[
         'click',
