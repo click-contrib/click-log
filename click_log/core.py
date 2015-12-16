@@ -41,7 +41,7 @@ class ClickHandler(logging.Handler):
         try:
             msg = self.format(record)
             level = record.levelname.lower()
-            err = level in ('error', 'exception', 'critical')
+            err = level in ('warning', 'error', 'exception', 'critical')
             click.echo(msg, err=err)
         except (KeyboardInterrupt, SystemExit):
             raise
