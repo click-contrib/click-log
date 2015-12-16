@@ -36,12 +36,20 @@ class ColorFormatter(logging.Formatter):
         return logging.Formatter.format(self, record)
 
 
-class ClickStream(object):
-    def write(self, string):
-        click.echo(string, err=True, nl=False)
+class ClickHandler(logging.Handler):
+    def emit(self, record):
+        try:
+            msg = self.format(record)
+            level = record.levelname.lower()
+            err = level in ('error', 'exception', 'critical')
+            click.echo(msg, err=err)
+        except (KeyboardInterrupt, SystemExit):
+            raise
+        except:
+            self.handleError(record)
 
 
-_default_handler = logging.StreamHandler(ClickStream())
+_default_handler = ClickHandler()
 _default_handler.formatter = ColorFormatter()
 
 

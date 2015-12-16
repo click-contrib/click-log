@@ -10,7 +10,7 @@ if not hasattr(click, 'get_current_context'):
     raise RuntimeError('You need Click 5.0.')
 
 from .core import (
-    ClickStream,
+    ClickHandler,
     ColorFormatter,
     basic_config,
     get_level,
