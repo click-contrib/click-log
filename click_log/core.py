@@ -54,6 +54,8 @@ _default_handler.formatter = ColorFormatter()
 
 
 def basic_config(logger=None):
+    '''Set up the default handler (:py:class:`ClickHandler`) and formatter
+    (:py:class:`ColorFormatter`) on the given logger.'''
     if not isinstance(logger, logging.Logger):
         logger = logging.getLogger(logger)
     logger.handlers = [_default_handler]
@@ -63,6 +65,7 @@ def basic_config(logger=None):
 
 
 def init(logger=None):
+    '''Set the application's logger and call :py:func:`basic_config` on it.'''
     def decorator(f):
         @functools.wraps(f)
         def wrapper(*args, **kwargs):
@@ -79,11 +82,12 @@ def init(logger=None):
 
 
 def get_logger():
+    '''Get the application's logger.'''
     return _meta().get('logger')
 
 
 def set_level(level):
-    '''Set the level for current context's logger.'''
+    '''Set the level for the application's logger.'''
 
     if not isinstance(level, int):
         raise ValueError('Must be constant from `logging`.')
@@ -96,4 +100,5 @@ def set_level(level):
 
 
 def get_level():
+    '''Get the level for the application's logger.'''
     return _meta().get('level', DEFAULT_LEVEL)

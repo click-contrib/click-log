@@ -6,6 +6,13 @@ from .core import set_level
 
 
 def simple_verbosity_option(*names, **kwargs):
+    '''A decorator that adds a `--verbosity, -v` option to the decorated
+    command.
+
+    Name can be configured through ``*names``. Keyword arguments are passed to
+    the underlying ``click.option`` decorator.
+    '''
+
     if not names:
         names = ['--verbosity', '-v']
 
