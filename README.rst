@@ -6,7 +6,8 @@ click-log
 
 Integrates logging with click.
 
-*This is rather experimental.  See tests for usage for now.*
+- `Documentation <https://click-log.readthedocs.org/>`_
+- `Source code <https://github.com/click-contrib/click-log>`_
 
 License
 =======
