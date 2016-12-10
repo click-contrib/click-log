@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import logging
 
 import click
@@ -22,7 +24,15 @@ def test_basic(runner):
     def cli():
         test_logger.info('hey')
         test_logger.error('damn')
+        test_logger.warning(u"""
+            Multiline error text with unicode chars:
+            ❤️ 💔 💌 💕 💞 💓 💗 💖 💘 💝 💟 💜 💛 💚 💙""")
 
     result = runner.invoke(cli, catch_exceptions=False)
     assert not result.exception
-    assert result.output == 'hey\nerror: damn\n'
+    assert result.output == (
+        'hey\n'
+        'error: damn\n'
+        'warning: \n'
+        'warning:             Multiline error text with unicode chars:\n'
+        u'warning:             ❤️ 💔 💌 💕 💞 💓 💗 💖 💘 💝 💟 💜 💛 💚 💙\n')

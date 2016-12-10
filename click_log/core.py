@@ -31,7 +31,7 @@ class ColorFormatter(logging.Formatter):
                 prefix = click.style('{}: '.format(level),
                                      **self.colors[level])
                 record.msg = '\n'.join(prefix + x
-                                       for x in str(record.msg).splitlines())
+                                       for x in record.msg.splitlines())
 
         return logging.Formatter.format(self, record)
 
