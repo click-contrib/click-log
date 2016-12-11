@@ -24,15 +24,41 @@ def test_basic(runner):
     def cli():
         test_logger.info('hey')
         test_logger.error('damn')
-        test_logger.warning(u"""
-            Multiline error text with unicode chars:
-            ❤️ 💔 💌 💕 💞 💓 💗 💖 💘 💝 💟 💜 💛 💚 💙""")
+
+    result = runner.invoke(cli, catch_exceptions=False)
+    assert not result.exception
+    assert result.output == 'hey\nerror: damn\n'
+
+
+def test_multilines(runner):
+    @click.command()
+    @click_log.init()
+    def cli():
+        test_logger.warning("""
+            Lorem ipsum dolor sit amet,
+            consectetur adipiscing elit,
+            sed do eiusmod tempor incididunt""")
 
     result = runner.invoke(cli, catch_exceptions=False)
     assert not result.exception
     assert result.output == (
-        'hey\n'
-        'error: damn\n'
         'warning: \n'
-        'warning:             Multiline error text with unicode chars:\n'
-        u'warning:             ❤️ 💔 💌 💕 💞 💓 💗 💖 💘 💝 💟 💜 💛 💚 💙\n')
+        'warning:             Lorem ipsum dolor sit amet,\n'
+        'warning:             consectetur adipiscing elit,\n'
+        'warning:             sed do eiusmod tempor incididunt\n')
+
+
+def test_unicode(runner):
+    @click.command()
+    @click_log.init()
+    def cli():
+        test_logger.error(u"""
+            ❤️ 💔 💌 💕 💞 💓 💗 💖 💘
+            💝 💟 💜 💛 💚 💙""")
+
+    result = runner.invoke(cli, catch_exceptions=False)
+    assert not result.exception
+    assert result.output == (
+        'error: \n'
+        u'error:             ❤️ 💔 💌 💕 💞 💓 💗 💖 💘\n'
+        u'error:             💝 💟 💜 💛 💚 💙\n')
