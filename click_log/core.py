@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import sys
+
 import functools
 import logging
 
@@ -9,6 +11,13 @@ _ctx = click.get_current_context
 
 LOGGER_KEY = __name__ + '.logger'
 DEFAULT_LEVEL = logging.INFO
+
+PY2 = sys.version_info[0] == 2
+
+if PY2:
+    text_type = unicode
+else:
+    text_type = str
 
 
 def _meta():
@@ -30,8 +39,11 @@ class ColorFormatter(logging.Formatter):
             if level in self.colors:
                 prefix = click.style('{}: '.format(level),
                                      **self.colors[level])
-                record.msg = '\n'.join(prefix + x
-                                       for x in str(record.msg).splitlines())
+
+                msg = record.msg
+                if not isinstance(record.msg, (bytes, text_type)):
+                    msg = str(msg)
+                record.msg = '\n'.join(prefix + x for x in msg.splitlines())
 
         return logging.Formatter.format(self, record)
 
