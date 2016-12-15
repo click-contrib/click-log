@@ -41,7 +41,9 @@ class ColorFormatter(logging.Formatter):
                                      **self.colors[level])
 
                 msg = record.msg
-                if not isinstance(record.msg, (bytes, text_type)):
+                if isinstance(record.msg, bytes):
+                    msg = msg.decode()
+                elif not isinstance(record.msg, text_type):
                     msg = str(msg)
                 record.msg = '\n'.join(prefix + x for x in msg.splitlines())
 
