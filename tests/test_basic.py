@@ -62,3 +62,14 @@ def test_unicode(runner):
         'error: \n'
         u'error:             ❤️ 💔 💌 💕 💞 💓 💗 💖 💘\n'
         u'error:             💝 💟 💜 💛 💚 💙\n')
+
+
+def test_non_string_log(runner):
+    @click.command()
+    @click_log.init()
+    def cli():
+        test_logger.error(42)
+
+    result = runner.invoke(cli, catch_exceptions=False)
+    assert not result.exception
+    assert result.output == 'error: 42\n'
