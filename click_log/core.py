@@ -15,7 +15,7 @@ DEFAULT_LEVEL = logging.INFO
 PY2 = sys.version_info[0] == 2
 
 if PY2:
-    text_type = unicode
+    text_type = unicode  # noqa
 else:
     text_type = str
 
@@ -41,7 +41,10 @@ class ColorFormatter(logging.Formatter):
                                      **self.colors[level])
 
                 msg = record.msg
-                if not isinstance(record.msg, (bytes, text_type)):
+                if not PY2 and isinstance(msg, bytes):
+                    msg = msg.decode(sys.getfilesystemencoding(),
+                                     'replace')
+                elif not isinstance(msg, (text_type, bytes)):
                     msg = str(msg)
                 record.msg = '\n'.join(prefix + x for x in msg.splitlines())
 

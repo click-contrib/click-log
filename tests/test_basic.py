@@ -64,12 +64,15 @@ def test_unicode(runner):
         u'error:             💝 💟 💜 💛 💚 💙\n')
 
 
-def test_non_string_log(runner):
+def test_weird_types_log(runner):
     @click.command()
     @click_log.init()
     def cli():
         test_logger.error(42)
+        test_logger.error('42')
+        test_logger.error(b'42')
+        test_logger.error(u'42')
 
     result = runner.invoke(cli, catch_exceptions=False)
     assert not result.exception
-    assert result.output == 'error: 42\n'
+    assert result.output == 'error: 42\n' * 4
