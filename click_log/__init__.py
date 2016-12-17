@@ -3,7 +3,7 @@
 
 import click
 
-__version__ = '0.1.7'
+__version__ = '0.1.8'
 
 
 if not hasattr(click, 'get_current_context'):
