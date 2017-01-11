@@ -19,6 +19,7 @@ setup(
     author_email='markus@unterwaditzer.net',
     url='https://github.com/click-contrib/click-log',
     license='MIT',
+    long_description=open('README.rst').read(),
     classifiers=[
         # See: https://pypi.python.org/pypi?:action=list_classifiers
         'Development Status :: 4 - Beta',
