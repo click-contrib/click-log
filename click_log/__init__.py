@@ -18,4 +18,4 @@ from .core import (
     set_level,
 )
 
-from .options import simple_verbosity_option
+from .options import simple_verbosity_option, logfile_option
