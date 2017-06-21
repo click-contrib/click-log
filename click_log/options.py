@@ -2,7 +2,7 @@ import logging
 
 import click
 
-from .core import set_level
+from .core import set_level, set_logfile
 
 
 def simple_verbosity_option(*names, **kwargs):
@@ -32,4 +32,22 @@ def simple_verbosity_option(*names, **kwargs):
             set_level(x)
 
         return click.option(*names, callback=_set_level, **kwargs)(f)
+    return decorator
+
+
+def logfile_option(*names, **kwargs):
+    if not names:
+        names = ['--logfile', '-l']
+
+    kwargs.setdefault('default', 'None')
+    kwargs.setdefault('metavar', 'LOGFILE')
+    kwargs.setdefault('expose_value', False)
+    kwargs.setdefault('help', 'File to log to (default: stdout)')
+    kwargs.setdefault('is_eager', True)
+    kwargs.setdefault('type', click.Path(writable=True, dir_okay=False))
+
+    def decorator(f):
+        def _set_logfile(ctx, param, value):
+            set_logfile(value)
+        return click.option(*names, callback=_set_logfile, **kwargs)(f)
     return decorator

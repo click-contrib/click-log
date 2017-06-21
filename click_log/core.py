@@ -68,12 +68,15 @@ _default_handler = ClickHandler()
 _default_handler.formatter = ColorFormatter()
 
 
-def basic_config(logger=None):
+def basic_config(logger=None, logfile=None):
     '''Set up the default handler (:py:class:`ClickHandler`) and formatter
     (:py:class:`ColorFormatter`) on the given logger.'''
     if not isinstance(logger, logging.Logger):
         logger = logging.getLogger(logger)
-    logger.handlers = [_default_handler]
+    if logfile:
+        logger.addHandler(logging.FileHandler(logfile))
+    else:
+        logger.handlers = [_default_handler]
     logger.propagate = False
 
     return logger
@@ -85,7 +88,7 @@ def init(logger=None):
         @functools.wraps(f)
         def wrapper(*args, **kwargs):
             m = _meta()
-            l = basic_config(logger=logger)
+            l = basic_config(logger=logger, logfile=m.get('logfile'))
             l.setLevel(m.get('level', DEFAULT_LEVEL))
 
             if m.setdefault('logger', l) is not l:
@@ -117,3 +120,13 @@ def set_level(level):
 def get_level():
     '''Get the level for the application's logger.'''
     return _meta().get('level', DEFAULT_LEVEL)
+
+
+def set_logfile(filename):
+    if filename:
+        logger = get_logger()
+        if logger:
+            for handler in logger.handlers[:]:
+                logger.removeHandler(handler)
+            logger.addHandler(logging.FileHandler(filename))
+    _meta()['logfile'] = filename
