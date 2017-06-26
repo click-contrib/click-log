@@ -76,3 +76,49 @@ def test_weird_types_log(runner):
     result = runner.invoke(cli, catch_exceptions=False)
     assert not result.exception
     assert result.output == 'error: 42\n' * 4
+
+
+def test_formatter(runner):
+    formatter = logging.Formatter(fmt='%(levelname)s | %(message)s')
+
+    @click.command()
+    @click_log.init(formatter=formatter)
+    def cli():
+        test_logger.debug('hey')
+        test_logger.info('yo')
+        test_logger.warning('oh')
+        test_logger.error('damn')
+
+    result = runner.invoke(cli, catch_exceptions=False)
+    assert not result.exception
+    assert result.output == 'INFO | yo\nWARNING | oh\nERROR | damn\n'
+
+
+def test_level(runner):
+    @click.command()
+    @click_log.init(level=logging.WARNING)
+    def cli():
+        test_logger.debug('hey')
+        test_logger.info('yo')
+        test_logger.warning('oh')
+        test_logger.error('damn')
+
+    result = runner.invoke(cli, catch_exceptions=False)
+    assert not result.exception
+    assert result.output == 'warning: oh\nerror: damn\n'
+
+
+def test_level_with_formatter(runner):
+    formatter = logging.Formatter(fmt='%(levelname)s | %(message)s')
+
+    @click.command()
+    @click_log.init(level=logging.WARNING, formatter=formatter)
+    def cli():
+        test_logger.debug('hey')
+        test_logger.info('yo')
+        test_logger.warning('oh')
+        test_logger.error('damn')
+
+    result = runner.invoke(cli, catch_exceptions=False)
+    assert not result.exception
+    assert result.output == 'WARNING | oh\nERROR | damn\n'
