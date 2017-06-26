@@ -65,28 +65,36 @@ class ClickHandler(logging.Handler):
 
 
 _default_handler = ClickHandler()
-_default_handler.formatter = ColorFormatter()
 
 
-def basic_config(logger=None):
+def basic_config(logger=None, formatter=None):
     '''Set up the default handler (:py:class:`ClickHandler`) and formatter
     (:py:class:`ColorFormatter`) on the given logger.'''
     if not isinstance(logger, logging.Logger):
         logger = logging.getLogger(logger)
+    if formatter is None:
+        _default_handler.formatter = ColorFormatter()
+    else:
+        _default_handler.formatter = formatter
+
     logger.handlers = [_default_handler]
     logger.propagate = False
 
     return logger
 
 
-def init(logger=None):
+def init(logger=None, formatter=None, level=None):
     '''Set the application's logger and call :py:func:`basic_config` on it.'''
     def decorator(f):
         @functools.wraps(f)
         def wrapper(*args, **kwargs):
             m = _meta()
-            l = basic_config(logger=logger)
-            l.setLevel(m.get('level', DEFAULT_LEVEL))
+            l = basic_config(logger=logger, formatter=formatter)
+            if level is None:
+                log_level = m.get('level', DEFAULT_LEVEL)
+            else:
+                log_level = level
+            l.setLevel(log_level)
 
             if m.setdefault('logger', l) is not l:
                 raise RuntimeError('Only one main logger allowed.')
