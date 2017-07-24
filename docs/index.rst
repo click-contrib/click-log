@@ -104,6 +104,8 @@ API
 
 .. autofunction:: basic_config
 
+.. autofunction:: pre_record
+
 .. autofunction:: get_level
 
 .. autofunction:: set_level

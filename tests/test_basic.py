@@ -76,3 +76,18 @@ def test_weird_types_log(runner):
     result = runner.invoke(cli, catch_exceptions=False)
     assert not result.exception
     assert result.output == 'error: 42\n' * 4
+
+
+def test_pre_record(runner):
+    click_log.pre_record()
+    test_logger.debug('catch me!')
+
+    @click.command()
+    @click_log.init()
+    @click_log.simple_verbosity_option()
+    def cli():
+        test_logger.debug('hello')
+
+    result = runner.invoke(cli, ['-v', 'debug'], catch_exceptions=False)
+    assert 'debug: hello' in result.output
+    assert 'debug: catch me!' in result.output

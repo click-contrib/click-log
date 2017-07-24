@@ -16,6 +16,7 @@ from .core import (
     get_level,
     init,
     set_level,
+    pre_record
 )
 
 from .options import simple_verbosity_option
