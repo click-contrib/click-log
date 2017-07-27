@@ -1,6 +1,7 @@
 import logging
 
 import click
+from .core import _normalize_logger
 
 
 def simple_verbosity_option(logger, *names, **kwargs):
@@ -19,6 +20,8 @@ def simple_verbosity_option(logger, *names, **kwargs):
     kwargs.setdefault('expose_value', False)
     kwargs.setdefault('help', 'Either CRITICAL, ERROR, WARNING, INFO or DEBUG')
     kwargs.setdefault('is_eager', True)
+
+    logger = _normalize_logger(logger)
 
     def decorator(f):
         def _set_level(ctx, param, value):
