@@ -80,14 +80,18 @@ def test_weird_types_log(runner):
 
 def test_pre_record(runner):
     click_log.pre_record()
-    test_logger.debug('catch me!')
+
+    def callback(context, param, value):
+        test_logger.debug('catch me!')
 
     @click.command()
+    @click.option('--hello', default=None, callback=callback)
     @click_log.init()
     @click_log.simple_verbosity_option()
-    def cli():
+    def cli(hello):
         test_logger.debug('hello')
 
-    result = runner.invoke(cli, ['-v', 'debug'], catch_exceptions=False)
-    assert 'debug: hello' in result.output
-    assert 'debug: catch me!' in result.output
+    for _ in range(2):
+        result = runner.invoke(cli, ['-v', 'debug'], catch_exceptions=False)
+        assert 'debug: hello' in result.output
+        assert 'debug: catch me!' in result.output

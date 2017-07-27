@@ -100,27 +100,38 @@ def init(logger=None):
         @functools.wraps(f)
         def wrapper(*args, **kwargs):
             m = _meta()
-            l = basic_config(logger=logger)
+            l = _normalize_logger(logger)
+            old_handlers = l.handlers
+            old_level = l.level
+            old_propagate = l.propagate
+
+            l = basic_config(logger=l)
             l.setLevel(m.get('level', DEFAULT_LEVEL))
 
             if m.setdefault('logger', l) is not l:
                 raise RuntimeError('Only one main logger allowed.')
 
-            _handle_prerecorded(l)
+            _handle_prerecorded(l, old_handlers)
 
-            return f(*args, **kwargs)
+            try:
+                return f(*args, **kwargs)
+            finally:
+                l.handlers = old_handlers
+                l.level = old_level
+                l.propagate = old_propagate
         return wrapper
     return decorator
 
 
-def _handle_prerecorded(l):
-    try:
-        records = l._click_log_prerecorded
-        del l._click_log_prerecorded
-    except AttributeError:
+def _handle_prerecorded(l, handlers):
+    for handler in handlers:
+        if isinstance(handler, PrerecordingHandler):
+            break
+    else:
         return
 
-    for record in records:
+    while handler._record_queue:
+        record = handler._record_queue.popleft()
         if l.isEnabledFor(record.levelno):
             l.handle(record)
 
@@ -162,7 +173,6 @@ def pre_record(logger=None, maxlen=20):
     logger.handlers = [PrerecordingHandler(queue)]
     logger.propagate = False
     logger.setLevel(logging.DEBUG)
-    logger._click_log_prerecorded = queue
     return logger
 
 
