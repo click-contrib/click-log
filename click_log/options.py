@@ -2,10 +2,8 @@ import logging
 
 import click
 
-from .core import set_level
 
-
-def simple_verbosity_option(*names, **kwargs):
+def simple_verbosity_option(logger, *names, **kwargs):
     '''A decorator that adds a `--verbosity, -v` option to the decorated
     command.
 
@@ -29,7 +27,7 @@ def simple_verbosity_option(*names, **kwargs):
                 raise click.BadParameter(
                     'Must be CRITICAL, ERROR, WARNING, INFO or DEBUG, not {}'
                 )
-            set_level(x)
+            logger.setLevel(x)
 
         return click.option(*names, callback=_set_level, **kwargs)(f)
     return decorator

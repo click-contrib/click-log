@@ -11,6 +11,8 @@ import pytest
 
 
 test_logger = logging.getLogger(__name__)
+click_log.basic_config(test_logger)
+test_logger.level = logging.INFO
 
 
 @pytest.fixture
@@ -20,7 +22,6 @@ def runner():
 
 def test_basic(runner):
     @click.command()
-    @click_log.init()
     def cli():
         test_logger.info('hey')
         test_logger.error('damn')
@@ -32,7 +33,6 @@ def test_basic(runner):
 
 def test_multilines(runner):
     @click.command()
-    @click_log.init()
     def cli():
         test_logger.warning("""
             Lorem ipsum dolor sit amet,
@@ -50,7 +50,6 @@ def test_multilines(runner):
 
 def test_unicode(runner):
     @click.command()
-    @click_log.init()
     def cli():
         test_logger.error(u"""
             ❤️ 💔 💌 💕 💞 💓 💗 💖 💘
@@ -66,7 +65,6 @@ def test_unicode(runner):
 
 def test_weird_types_log(runner):
     @click.command()
-    @click_log.init()
     def cli():
         test_logger.error(42)
         test_logger.error('42')
@@ -78,19 +76,16 @@ def test_weird_types_log(runner):
     assert result.output == 'error: 42\n' * 4
 
 
-def test_pre_record(runner):
-    click_log.pre_record(test_logger)
-
+def test_early_logging(runner):
     i = None
 
     def callback(context, param, value):
         test_logger.debug('catch me {}!'.format(i))
 
     @click.command()
+    @click_log.simple_verbosity_option(test_logger)
     @click.option('--config', is_eager=True, default=None, expose_value=False,
                   callback=callback)
-    @click_log.init(test_logger)
-    @click_log.simple_verbosity_option()
     def cli():
         test_logger.debug('hello')
 

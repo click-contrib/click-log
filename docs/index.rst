@@ -65,10 +65,10 @@ This is where click-log comes in::
 
     import logging
     logger = logging.getLogger(__name__)
+    click_log.basic_config(logger)
 
     @click.command()
     @click_log.simple_verbosity_option()
-    @click_log.init(__name__)
     def cli():
         logger.info("Dividing by zero.")
 
@@ -95,20 +95,19 @@ The :py:func:`simple_verbosity_option` decorator adds a ``--verbosity`` option
 that takes a (case-insensitive) value of ``DEBUG``, ``INFO``, ``WARNING``,
 ``ERROR``, or ``CRITICAL``, and calls :py:func:`set_level` accordingly.
 
+.. note::
+
+    Make sure to define the `simple_verbosity_option` as early as possible.
+    Otherwise logging setup will not be early enough for some of your other
+    eager options.
+
 API
 ===
 
-.. autofunction:: init
-
-.. autofunction:: simple_verbosity_option
 
 .. autofunction:: basic_config
 
-.. autofunction:: pre_record
-
-.. autofunction:: get_level
-
-.. autofunction:: set_level
+.. autofunction:: simple_verbosity_option
 
 Classes
 -------
