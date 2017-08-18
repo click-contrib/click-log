@@ -68,7 +68,7 @@ This is where click-log comes in::
     click_log.basic_config(logger)
 
     @click.command()
-    @click_log.simple_verbosity_option()
+    @click_log.simple_verbosity_option(logger)
     def cli():
         logger.info("Dividing by zero.")
 
