@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import sys
-
-import collections
-import functools
 import logging
+import sys
 
 import click
 
