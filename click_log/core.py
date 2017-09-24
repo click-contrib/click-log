@@ -58,7 +58,7 @@ class ClickHandler(logging.Handler):
             click.echo(msg, err=err)
         except (KeyboardInterrupt, SystemExit):
             raise
-        except:
+        except Exception:
             self.handleError(record)
 
 
