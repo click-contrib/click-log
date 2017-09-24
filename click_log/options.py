@@ -4,7 +4,7 @@ import click
 from .core import _normalize_logger
 
 
-def simple_verbosity_option(logger, *names, **kwargs):
+def simple_verbosity_option(logger=None, *names, **kwargs):
     '''A decorator that adds a `--verbosity, -v` option to the decorated
     command.
 
