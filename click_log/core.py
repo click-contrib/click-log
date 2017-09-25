@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import sys
-
-import collections
-import functools
 import logging
+import sys
 
 import click
 
@@ -61,7 +58,7 @@ class ClickHandler(logging.Handler):
             click.echo(msg, err=err)
         except (KeyboardInterrupt, SystemExit):
             raise
-        except:
+        except Exception:
             self.handleError(record)
 
 
