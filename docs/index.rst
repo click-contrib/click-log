@@ -86,14 +86,10 @@ The output will look like this::
 The ``error:``-prefix will be red, unless the output is piped to another
 command.
 
-Under the hood, click-log will get the logger by the given name, and store it
-on the click context object. You can then use :py:func:`get_level` and
-:py:func:`set_level`. Those functions will look up the logger from the context
-object without you having to pass any logger object or name.
-
 The :py:func:`simple_verbosity_option` decorator adds a ``--verbosity`` option
 that takes a (case-insensitive) value of ``DEBUG``, ``INFO``, ``WARNING``,
-``ERROR``, or ``CRITICAL``, and calls :py:func:`set_level` accordingly.
+``ERROR``, or ``CRITICAL``, and calls ``setLevel`` on the given logger
+accordingly.
 
 .. note::
 
