@@ -34,18 +34,18 @@ class ColorFormatter(logging.Formatter):
     def format(self, record):
         if not record.exc_info:
             level = record.levelname.lower()
+            msg = record.msg
             if level in self.colors:
                 prefix = click.style('{}: '.format(level),
                                      **self.colors[level])
 
-                msg = record.msg
                 if not PY2 and isinstance(msg, bytes):
                     msg = msg.decode(sys.getfilesystemencoding(),
                                      'replace')
                 elif not isinstance(msg, (text_type, bytes)):
                     msg = str(msg)
-                record.msg = '\n'.join(prefix + x for x in msg.splitlines())
-
+                msg = '\n'.join(prefix + x for x in msg.splitlines())
+            return msg
         return logging.Formatter.format(self, record)
 
 
