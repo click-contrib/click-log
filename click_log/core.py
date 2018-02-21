@@ -28,6 +28,7 @@ class ColorFormatter(logging.Formatter):
         'exception': dict(fg='red'),
         'critical': dict(fg='red'),
         'debug': dict(fg='blue'),
+        'info': dict(fg='white'),
         'warning': dict(fg='yellow')
     }
 
