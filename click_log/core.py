@@ -50,12 +50,13 @@ class ColorFormatter(logging.Formatter):
 
 
 class ClickHandler(logging.Handler):
+    _use_stderr = True
+
     def emit(self, record):
         try:
             msg = self.format(record)
             level = record.levelname.lower()
-            err = level in ('warning', 'error', 'exception', 'critical')
-            click.echo(msg, err=err)
+            click.echo(msg, err=self._use_stderr)
         except Exception:
             self.handleError(record)
 
