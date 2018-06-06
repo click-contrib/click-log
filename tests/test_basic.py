@@ -73,7 +73,7 @@ def test_weird_types_log(runner):
 
     result = runner.invoke(cli, catch_exceptions=False)
     assert not result.exception
-    assert result.output == 'error: 42\n' * 4
+    assert set(result.output.splitlines()) <= set(('error: 42', 'error: b\'42\''))
 
 
 def test_early_logging(runner):
