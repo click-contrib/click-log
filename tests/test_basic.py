@@ -93,3 +93,13 @@ def test_early_logging(runner):
         result = runner.invoke(cli, ['-v', 'debug'], catch_exceptions=False)
         assert 'debug: hello' in result.output
         assert 'debug: catch me {}!'.format(i) in result.output
+
+
+def test_logging_args(runner):
+    @click.command()
+    @click_log.simple_verbosity_option(test_logger)
+    def cli():
+        test_logger.debug('hello %s', 'world')
+
+    result = runner.invoke(cli, ['-v', 'debug'])
+    assert 'debug: hello world' in result.output
