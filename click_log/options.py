@@ -21,7 +21,8 @@ def simple_verbosity_option(logger=None, *names, **kwargs):
     kwargs.setdefault('default', 'INFO')
     kwargs.setdefault('metavar', 'LVL')
     kwargs.setdefault('expose_value', False)
-    kwargs.setdefault('help', 'Either CRITICAL, ERROR, WARNING, INFO or DEBUG')
+    kwargs.setdefault('help',
+                      'Either CRITICAL, ERROR, WARNING, INFO or DEBUG.')
     kwargs.setdefault('is_eager', True)
 
     logger = _normalize_logger(logger)
