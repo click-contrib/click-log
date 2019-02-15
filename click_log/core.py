@@ -50,7 +50,12 @@ class ClickHandler(logging.Handler):
         try:
             msg = self.format(record)
             level = record.levelname.lower()
-            click.echo(msg, err=self._use_stderr)
+            newline = True
+
+            if hasattr(record, 'nl'):
+                newline = record.nl;
+
+            click.echo(msg, nl=newline, err=self._use_stderr)
         except Exception:
             self.handleError(record)
 
