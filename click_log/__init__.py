@@ -15,4 +15,4 @@ from .core import (
     basic_config,
 )
 
-from .options import simple_verbosity_option
+from .options import simple_verbosity_option, verbosity_option
