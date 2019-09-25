@@ -81,16 +81,16 @@ def verbosity_option(logger=None, *names, **kwargs):
     kwargs.setdefault("default", "INFO")
     kwargs.setdefault("metavar", "[LOGGER=]LEVEL[,...]")
     kwargs.setdefault("expose_value", False)
-    kwargs.setdefault("help", f"A {SYNTAX_DESC}.")
+    kwargs.setdefault("help", "A %s." % (SYNTAX_DESC,))
     kwargs.setdefault("is_eager", True)
 
     logger = _normalize_logger(logger)
 
     def decorator(f):
-        def _set_log_levels(_ctx, _param, value: str):
+        def _set_log_levels(_ctx, _param, value):
             for item in value.split(","):
                 try:
-                    name, level = item.split("=", maxsplit=1)
+                    name, level = item.split("=", 1)
                     target_logger = logger.getChild(name)
                 except ValueError:
                     level = item
@@ -98,7 +98,7 @@ def verbosity_option(logger=None, *names, **kwargs):
 
                 logging_level = getattr(logging, level.upper(), None)
                 if logging_level is None:
-                    raise click.BadParameter(f"Must be a {SYNTAX_DESC}, not {{}}")
+                    raise click.BadParameter("Must be a %s, not {}" % SYNTAX_DESC)
 
                 target_logger.setLevel(logging_level)
 
