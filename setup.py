@@ -44,4 +44,7 @@ setup(
     install_requires=[
         'click',
     ],
+    extras_require={
+        "doc": ["sphinx>=3.2,<3.3", "sphinx-rtd-theme>=0.5,<0.6"],
+    },
 )
