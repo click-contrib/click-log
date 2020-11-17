@@ -36,7 +36,7 @@ except ImportError:
               'theme.')
         print('-' * 74)
 
-html_static_path = ['_static']
+# html_static_path = ['_static']
 htmlhelp_basename = 'click-logdoc'
 
 latex_elements = {}
