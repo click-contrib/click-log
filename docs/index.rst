@@ -83,13 +83,45 @@ The output will look like this::
     error: Failed to divide by zero.
 
 
-The ``error:``-prefix will be red, unless the output is piped to another
+Output colors
++++++++++++++
+
+In the Getting started example, the ``error:`` prefix will be red, unless the output is piped to another
 command.
 
 The :py:func:`simple_verbosity_option` decorator adds a ``--verbosity`` option
 that takes a (case-insensitive) value of ``DEBUG``, ``INFO``, ``WARNING``,
 ``ERROR``, or ``CRITICAL``, and calls ``setLevel`` on the given logger
 accordingly.
+Default colors:
+
++------------+---------+
+| Log level  | Color   |
++============+=========+
+| critical   | red     |
++------------+---------+
+| debug      | blue    |
++------------+---------+
+| error      | red     |
++------------+---------+
+| exception  | red     |
++------------+---------+
+| warning    | yellow  |
++------------+---------+
+
+To customize colors used by each level of log, it's possible to pass a dict with the foreground color for each log level.
+Color code must be `one of those included into click  <https://github.com/pallets/click/blob/master/examples/colors/colors.py>`_
+
+For example:
+
+.. code-block:: python
+
+    import logging
+    import click_log
+
+    click_log.ColorFormatter.colors['info'] = dict(fg="bright_black")
+
+
 
 .. note::
 
