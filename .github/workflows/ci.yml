@@ -1,0 +1,88 @@
+name: build
+on:
+  push: ~
+  pull_request: ~
+jobs:
+  build:
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ 3.6, 3.7, 3.8, 3.9 ]
+
+    steps:
+      - name: Setup python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: |
+          pip install -e[dev,ci] setup.py
+
+      - run: flake8
+
+      - run: coverage run --source=click_logging -m pytest
+
+      - run: python setup.py build
+
+      - name: Coveralls
+        run: coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+
+  commitlint:
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: wagoid/commitlint-github-action@v2
+
+  release:
+    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+    needs: build
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ 3.8 }}
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Git User config
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "github-actions"
+
+      - name: Install Dependencies
+        run: pip install -e[dev,ci] setup.py
+
+      - name: Publish release
+        run: semantic-release -v DEBUG publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+
+      - name: Merge master to develop
+        # uses: robotology/gh-action-nightly-merge@v1.3.1  # Wait PR merge https://github.com/robotology/gh-action-nightly-merge/pull/5
+        uses: Toilal/gh-action-nightly-merge@master
+        with:
+          stable_branch: 'main'
+          development_branch: 'develop'
+          allow_ff: true
+          user_name: github-actions
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -5,13 +5,13 @@ import logging
 import click
 from click.testing import CliRunner
 
-import click_log
+import click_logging
 
 import pytest
 
 
 test_logger = logging.getLogger(__name__)
-click_log.basic_config(test_logger)
+click_logging.basic_config(test_logger)
 test_logger.level = logging.INFO
 
 
@@ -83,7 +83,7 @@ def test_early_logging(runner):
         test_logger.debug('catch me {}!'.format(i))
 
     @click.command()
-    @click_log.simple_verbosity_option(test_logger)
+    @click_logging.simple_verbosity_option(test_logger)
     @click.option('--config', is_eager=True, default=None, expose_value=False,
                   callback=callback)
     def cli():
@@ -97,7 +97,7 @@ def test_early_logging(runner):
 
 def test_logging_args(runner):
     @click.command()
-    @click_log.simple_verbosity_option(test_logger)
+    @click_logging.simple_verbosity_option(test_logger)
     def cli():
         test_logger.debug('hello %s', 'world')
 
