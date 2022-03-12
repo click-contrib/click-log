@@ -90,7 +90,7 @@ The :py:func:`simple_verbosity_option` decorator adds a ``--verbosity`` option
 (a short option ``-v`` is also available) that takes a (case-insensitive) value
 of ``DEBUG``, ``INFO``, ``WARNING``, ``ERROR``, or ``CRITICAL``, and calls
 ``setLevel`` on the given logger accordingly.
-The default logger revel is ``INFO``.
+The default logger level is ``INFO``.
 
 .. note::
 
