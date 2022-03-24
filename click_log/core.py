@@ -5,14 +5,8 @@ import sys
 
 import click
 
-_ctx = click.get_current_context
-
 LOGGER_KEY = __name__ + '.logger'
 DEFAULT_LEVEL = logging.INFO
-
-
-def _meta():
-    return _ctx().meta.setdefault(LOGGER_KEY, {})
 
 
 class ColorFormatter(logging.Formatter):
