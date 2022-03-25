@@ -5,21 +5,8 @@ import sys
 
 import click
 
-_ctx = click.get_current_context
-
 LOGGER_KEY = __name__ + '.logger'
 DEFAULT_LEVEL = logging.INFO
-
-PY2 = sys.version_info[0] == 2
-
-if PY2:
-    text_type = unicode  # noqa
-else:
-    text_type = str
-
-
-def _meta():
-    return _ctx().meta.setdefault(LOGGER_KEY, {})
 
 
 class ColorFormatter(logging.Formatter):
