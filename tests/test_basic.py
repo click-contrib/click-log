@@ -103,3 +103,20 @@ def test_logging_args(runner):
 
     result = runner.invoke(cli, ['-v', 'debug'])
     assert 'debug: hello world' in result.output
+
+
+def test_logging_complex_args(runner):
+    spammy_logger = test_logger.getChild("spam")
+    child_logger = spammy_logger.getChild("child")
+
+    @click.command()
+    @click_log.verbosity_option(test_logger)
+    def cli():
+        test_logger.debug("normal debug message")
+        spammy_logger.debug("spammy message")
+        child_logger.debug("interesting message")
+
+    result = runner.invoke(cli, ["-v", "debug,spam=info,spam.child=debug"])
+    assert "debug: normal debug message" in result.output
+    assert "debug: spammy message" not in result.output
+    assert "debug: interesting message" in result.output
